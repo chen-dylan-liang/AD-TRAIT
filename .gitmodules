@@ -1,0 +1,3 @@
+[submodule "C++/external/autodiff"]
+	path = C++/external/autodiff
+	url = https://github.com/autodiff/autodiff.git

@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "wasp"
+version = "0.0.1"
+description = ""
+authors = ["djrakita <djrakita@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+apollo-toolbox-py = { git="https://github.com/Apollo-Lab-Yale/apollo-py", branch = "main", extras = ["all"] }
+# apollo-toolbox-py = {path = "/Users/dannyrakita/Documents/apollo-py", extras = ["all"]}
+matplotlib = "^3.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,21 @@
+[package]
+name = "ad_-trait-eval"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+ad_trait = { git = "https://github.com/djrakita/ad_trait" }
+apollo-rust-linalg-adtrait = { git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-linalg-adtrait"}
+apollo-rust-linalg = { git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-linalg"}
+nalgebra = { version = "0.33.0", features = ["rand", "serde-serialize"] }
+rand = "0.9.0"
+
+[lib]
+name = "ad_trait_eval"
+crate-type = ["cdylib","rlib"]
+
+[profile.dev]
+opt-level = 3
+
+[profile.release]
+opt-level = 3
