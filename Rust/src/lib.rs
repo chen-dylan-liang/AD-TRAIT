@@ -2,7 +2,8 @@ use apollo_rust_linalg_adtrait::{V, M, ApolloDVectorTrait};
 use rand::Rng;
 use ad_trait::AD;
 use ad_trait::differentiable_block::DifferentiableBlock;
-use ad_trait::differentiable_function::{DifferentiableFunctionClass, DifferentiableFunctionTrait, ForwardAD, ReverseAD};
+use ad_trait::differentiable_function::{DifferentiableFunctionClass, DifferentiableFunctionTrait, ForwardAD, ForwardADMulti, ReverseAD};
+use ad_trait::forward_ad::adfn::adfn;
 
 #[derive(Clone, Debug)]
 pub struct BenchmarkFunctionVec {
@@ -97,7 +98,7 @@ impl BenchmarkFunctionNalgebra {
 }
 
 impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionNalgebra {
-    fn call(&self, inputs: &V<T>, _freeze: bool) -> V<T> {
+    fn call(&self, inputs: &[T], freeze: bool) -> Vec<T> {
         let mut out = V::<T>::zeros(self.m);
 
         for i in 0..self.m {
@@ -112,7 +113,8 @@ impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionNalgebra {
                 }
             }
         }
-        out
+        //out
+        out.data.as_vec().to_vec()
     }
 
     fn num_inputs(&self) -> usize {
@@ -131,30 +133,24 @@ impl DifferentiableFunctionClass for DCBenchmarkFunctionNalgebra {
 
 pub struct EvaluationConditionPack {
     //pub finite_differencing: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing>,
-    pub forward_ad_nalgebra: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardAD>,
-    pub reverse_ad_nalbegra: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ReverseAD>,
-    pub forward_ad_vec: DifferentiableBlock<DCBenchmarkFunctionVec, ForwardAD>,
-    pub reverse_ad_vec: DifferentiableBlock<DCBenchmarkFunctionVec, ReverseAD>,
-    // pub forward_ad_multi_8: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<8>>>,
-    // pub forward_ad_multi_16: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<16>>>,
-    // pub forward_ad_multi_32: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<32>>>,
-    // pub forward_ad_multi_1000: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<1000>>>,
+    pub forward_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardAD>,
+    pub reverse_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ReverseAD>,
+    pub forward_ad_multi_8: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<8>>>,
+    pub forward_ad_multi_16: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<16>>>,
+    pub forward_ad_multi_32: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<32>>>,
+    pub forward_ad_multi_1000: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<1000>>>,
 }
 impl EvaluationConditionPack {
     pub fn new(n: usize, m: usize, o: usize) -> Self {
-        let f_nalgebra = BenchmarkFunctionNalgebra::new(n, m, o);
-        let f_vec = BenchmarkFunctionVec::new(n,m,o);
-
+        let f = BenchmarkFunctionNalgebra::new(n, m, o);
         Self {
             //finite_differencing: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing::new(), f.clone(), f.clone()),
-            forward_ad_nalgebra: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f_nalgebra.clone(), f_nalgebra.clone()),
-            reverse_ad_nalbegra: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ReverseAD::new(), f_nalgebra.clone(), f_nalgebra.clone()),
-            forward_ad_vec: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionVec, ForwardAD::new(), f_vec.clone(), f_vec.clone()),
-            reverse_ad_vec: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionVec, ReverseAD::new(), f_vec.clone(), f_vec.clone()),
-            // forward_ad_multi_8: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<8>>::new(), f.clone(), f.clone()),
-            // forward_ad_multi_16: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<16>>::new(), f.clone(), f.clone()),
-            // forward_ad_multi_32: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<32>>::new(), f.clone(), f.clone()),
-            // forward_ad_multi_1000: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<1000>>::new(), f.clone(), f.clone()),
+            forward_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f.clone(), f.clone()),
+            reverse_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ReverseAD::new(), f.clone(), f.clone()),
+            forward_ad_multi_8: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<8>>::new(), f.clone(), f.clone()),
+            forward_ad_multi_16: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<16>>::new(), f.clone(), f.clone()),
+            forward_ad_multi_32: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<32>>::new(), f.clone(), f.clone()),
+            forward_ad_multi_1000: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<1000>>::new(), f.clone(), f.clone()),
         }
     }
 }
