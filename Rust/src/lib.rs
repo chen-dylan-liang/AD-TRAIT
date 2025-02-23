@@ -1,8 +1,11 @@
 mod eval1;
+mod eval2;
+
 use ad_trait::differentiable_block::DifferentiableBlock;
 use ad_trait::differentiable_function::{ForwardAD, ForwardADMulti, ReverseAD};
 use ad_trait::forward_ad::adfn::adfn;
 use eval1::{BenchmarkFunctionNalgebra, DCBenchmarkFunctionNalgebra};
+
 pub struct EvaluationConditionPack {
     //pub finite_differencing: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing>,
     pub forward_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardAD>,
