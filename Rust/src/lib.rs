@@ -1,101 +1,164 @@
-use apollo_rust_linalg_adtrait::V;
-use ad_trait::differentiable_function::{ReverseAD, ForwardAD, ForwardADMulti};
-
-use nalgebra::DVector;
+use apollo_rust_linalg_adtrait::{V, M, ApolloDVectorTrait};
 use rand::Rng;
+use ad_trait::AD;
+use ad_trait::differentiable_block::DifferentiableBlock;
+use ad_trait::differentiable_function::{DifferentiableFunctionClass, DifferentiableFunctionTrait, ForwardAD, ReverseAD};
 
-pub struct BenchmarkFunction {
+#[derive(Clone, Debug)]
+pub struct BenchmarkFunctionVec {
     n: usize,
     m: usize,
-    num_operations: usize,
+    o: usize,
     r: Vec<Vec<usize>>,
-    s: Vec<Vec<i32>>,
+    s: Vec<Vec<usize>>
 }
 
-impl BenchmarkFunction {
-    pub fn new(n: usize, m: usize, num_operations: usize) -> Self {
-        let mut rng = rand::rng();
-        let mut r = Vec::with_capacity(m);
-        let mut s = Vec::with_capacity(m);
+impl BenchmarkFunctionVec {
+    pub fn new(n: usize, m: usize, o: usize) -> Self {
+        let mut r = vec![];
+        let mut s = vec![];
 
+        let mut rng = rand::rng();
         for _ in 0..m {
-            // Create a vector of length (num_operations + 1) with random indices in the range [0, n)
-            let r_vec: Vec<usize> = (0..(num_operations + 1))
-                .map(|_| rng.random_range(0..n))
-                .collect();
-            // Create a vector of length num_operations with random values 0 or 1.
-            let s_vec: Vec<i32> = (0..num_operations)
-                .map(|_| rng.random_range(0..2))
-                .collect();
-            r.push(r_vec);
-            s.push(s_vec);
+            let rr: Vec<usize> = (0..=o).map(|_| rng.random_range(0..n)).collect();
+            let ss: Vec<usize> = (0..o).map(|_| rng.random_range(0..=1)).collect();
+            r.push(rr);
+            s.push(ss);
         }
-        BenchmarkFunction {
+
+        Self {
             n,
             m,
-            num_operations,
+            o,
             r,
             s,
         }
     }
+}
 
-    /// Performs the computation on the input tensor `x` represented as a DVector.
-    ///
-    /// For each output function (total `m`), it starts with an element of `x` (chosen using
-    /// the first index in the corresponding `r` vector) and then performs a sequence of operations.
-    /// The operations are chosen based on the values in the corresponding `s` vector:
-    /// - If s[j] == 0: compute sin(cos(tmp) + x[rr[j + 1]])
-    /// - If s[j] == 1: compute cos(sin(tmp) + x[rr[j + 1]])
-    pub fn call_raw(&self, x: &DVector<f64>) -> Vec<f64> {
-        let mut out = Vec::with_capacity(self.m);
+impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionVec {
+    fn call(&self, inputs: &[T], _freeze: bool) -> Vec<T> {
+        let mut out = vec![];
 
         for i in 0..self.m {
             let rr = &self.r[i];
             let ss = &self.s[i];
-            // Start with the tensor value at the first random index.
-            let mut tmp = x[rr[0]];
-            // Apply each operation in sequence.
-            for j in 0..self.num_operations {
-                let val = x[rr[j + 1]];
-                tmp = match ss[j] {
-                    0 => (tmp.cos() + val).sin(),
-                    1 => (tmp.sin() + val).cos(),
-                    _ => panic!("Operation not supported"),
-                };
+
+            let mut tmp = inputs[rr[0]];
+            for j in 0..self.o {
+                if ss[j] == 0 {
+                    tmp = (tmp.cos() * inputs[rr[j+1]]).sin();
+                } else if ss[j] == 1 {
+                    tmp = (tmp.sin() * inputs[rr[j+1]]).cos();
+                } else {
+                    panic!("not supported")
+                }
             }
             out.push(tmp);
         }
 
-        out
+        return out;
     }
 
-    /// Returns the input dimension.
-    pub fn input_dim(&self) -> usize {
+    fn num_inputs(&self) -> usize {
         self.n
     }
 
-    /// Returns the output dimension.
-    pub fn output_dim(&self) -> usize {
+    fn num_outputs(&self) -> usize {
         self.m
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub struct DCBenchmarkFunctionVec;
+impl DifferentiableFunctionClass for DCBenchmarkFunctionVec {
+    type FunctionType<T: AD> = BenchmarkFunctionVec;
+}
 
-    #[test]
-    fn test_benchmark_function() {
-        let n = 10;
-        let m = 3;
-        let num_operations = 2;
-        // Create a BenchmarkFunction instance.
-        let bf = BenchmarkFunction::new(n, m, num_operations);
-        // Create a sample input tensor as a DVector of f64 values.
-        let x = DVector::from_vec((0..n).map(|i| i as f64).collect());
-        let output = bf.call_raw(&x);
-        // Verify that the number of outputs matches `m`.
-        assert_eq!(output.len(), bf.output_dim());
+#[derive(Clone, Debug)]
+pub struct BenchmarkFunctionNalgebra{
+    n: usize,
+    m: usize,
+    o: usize,
+    r: V<usize>,
+    s: V<usize>,
+}
+
+impl BenchmarkFunctionNalgebra {
+    pub fn new(n: usize, m: usize, o: usize) -> Self {
+        let mut r = V::<usize>::zeros(m*(o+1));
+        let mut s = V::<usize>::zeros(m*o);
+        let mut rng = rand::rng();
+        for i in 0..m {
+            for j in 0..=o {r[i*(o+1)+j]=rng.random_range(0..n)}
+            for j in 0..o {s[i*o+j]=rng.random_range(0..=1)}
+        }
+        Self{n,m,o,r,s}
     }
 }
+
+impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionNalgebra {
+    fn call(&self, inputs: &V<T>, _freeze: bool) -> V<T> {
+        let mut out = V::<T>::zeros(self.m);
+
+        for i in 0..self.m {
+            out[i] = inputs[self.r[i*self.o]];
+            for j in 0..self.o {
+                if self.s[i * self.o + j] == 0 {
+                    out[i] = (out[i].cos() * inputs[self.r[i * self.o + j + 1]]).sin();
+                } else if self.s[i * self.o + j] == 1 {
+                    out[i] = (out[i].sin() * inputs[self.r[i * self.o + j + 1]]).cos();
+                } else {
+                    panic!("not supported")
+                }
+            }
+        }
+        out
+    }
+
+    fn num_inputs(&self) -> usize {
+        self.n
+    }
+
+    fn num_outputs(&self) -> usize {
+        self.m
+    }
+}
+
+pub struct DCBenchmarkFunctionNalgebra;
+impl DifferentiableFunctionClass for DCBenchmarkFunctionNalgebra {
+    type FunctionType<T: AD> = BenchmarkFunctionNalgebra;
+}
+
+pub struct EvaluationConditionPack {
+    //pub finite_differencing: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing>,
+    pub forward_ad_nalgebra: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardAD>,
+    pub reverse_ad_nalbegra: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ReverseAD>,
+    pub forward_ad_vec: DifferentiableBlock<DCBenchmarkFunctionVec, ForwardAD>,
+    pub reverse_ad_vec: DifferentiableBlock<DCBenchmarkFunctionVec, ReverseAD>,
+    // pub forward_ad_multi_8: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<8>>>,
+    // pub forward_ad_multi_16: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<16>>>,
+    // pub forward_ad_multi_32: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<32>>>,
+    // pub forward_ad_multi_1000: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti<adfn<1000>>>,
+}
+impl EvaluationConditionPack {
+    pub fn new(n: usize, m: usize, o: usize) -> Self {
+        let f_nalgebra = BenchmarkFunctionNalgebra::new(n, m, o);
+        let f_vec = BenchmarkFunctionVec::new(n,m,o);
+
+        Self {
+            //finite_differencing: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing::new(), f.clone(), f.clone()),
+            forward_ad_nalgebra: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f_nalgebra.clone(), f_nalgebra.clone()),
+            reverse_ad_nalbegra: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ReverseAD::new(), f_nalgebra.clone(), f_nalgebra.clone()),
+            forward_ad_vec: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionVec, ForwardAD::new(), f_vec.clone(), f_vec.clone()),
+            reverse_ad_vec: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionVec, ReverseAD::new(), f_vec.clone(), f_vec.clone()),
+            // forward_ad_multi_8: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<8>>::new(), f.clone(), f.clone()),
+            // forward_ad_multi_16: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<16>>::new(), f.clone(), f.clone()),
+            // forward_ad_multi_32: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<32>>::new(), f.clone(), f.clone()),
+            // forward_ad_multi_1000: DifferentiableBlock::new_with_tag(DifferentiableFunctionClassBenchmarkFunction2, ForwardADMulti::<adfn<1000>>::new(), f.clone(), f.clone()),
+        }
+    }
+}
+
+
+
 
