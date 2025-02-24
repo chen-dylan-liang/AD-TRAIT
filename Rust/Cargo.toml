@@ -14,6 +14,8 @@ apollo-rust-robotics-core-adtrait={git = "https://github.com/Apollo-Lab-Yale/apo
 apollo-rust-modules = {git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-modules"}
 apollo-rust-robotics= {git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-robotics"}
 apollo-rust-robotics-adtrait={git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-robotics-adtrait"}
+apollo-rust-lie = {git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-lie"}
+apollo-rust-lie-adtrait={git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-lie-adtrait"}
 nalgebra = { version = "0.33.0", features = ["rand", "serde-serialize"] }
 rand = "0.9.0"
 

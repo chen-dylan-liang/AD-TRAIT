@@ -79,6 +79,8 @@ name = "ad_-trait-eval"
 version = "0.0.1"
 dependencies = [
  "ad_trait",
+ "apollo-rust-lie",
+ "apollo-rust-lie-adtrait",
  "apollo-rust-linalg",
  "apollo-rust-linalg-adtrait",
  "apollo-rust-modules",
