@@ -4,7 +4,7 @@ use std::time::Instant;
 use apollo_rust_linalg_adtrait::{ApolloDVectorTrait, V};
 fn benchmark(n: usize, m:usize, o:usize, passes:usize) -> [f64; 6] {
     let mut durations = [0.0; 6];
-    let approaches = ["forward_ad", "reverse_ad", "mc8", "mc16","mc32", "mc1000"];
+    let approaches = ["forward_ad", "reverse_ad", "mc8", "mc16","mc32", "mc64"];
     for p in 0..passes {
         println!("Pass {p} running...");
         let pack = EvaluationConditionPack::new(n, m, o);
@@ -19,10 +19,10 @@ fn benchmark(n: usize, m:usize, o:usize, passes:usize) -> [f64; 6] {
                 "mc8" => pack.forward_ad_multi_8.derivative(x_vec),
                 "mc16" => pack.forward_ad_multi_16.derivative(x_vec),
                 "mc32" => pack.forward_ad_multi_32.derivative(x_vec),
-                "mc1000" => pack.forward_ad_multi_1000.derivative(x_vec),
+                "mc64" => pack.forward_ad_multi_64.derivative(x_vec),
                 _ => panic!("Unknown approach: {}", approach),
             };
-            let duration = start.elapsed().as_secs_f64();
+            let duration = start.elapsed().as_secs_f64()*1000.0*1000.0;
             durations[i]+=duration;
         }
     }

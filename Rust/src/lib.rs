@@ -13,7 +13,7 @@ pub struct EvaluationConditionPack {
     pub forward_ad_multi_8: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<8>>>,
     pub forward_ad_multi_16: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<16>>>,
     pub forward_ad_multi_32: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<32>>>,
-    pub forward_ad_multi_1000: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<1000>>>,
+    pub forward_ad_multi_64: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<64>>>,
 }
 impl EvaluationConditionPack {
     pub fn new(n: usize, m: usize, o: usize) -> Self {
@@ -25,7 +25,7 @@ impl EvaluationConditionPack {
             forward_ad_multi_8: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<8>>::new(), f.clone(), f.clone()),
             forward_ad_multi_16: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<16>>::new(), f.clone(), f.clone()),
             forward_ad_multi_32: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<32>>::new(), f.clone(), f.clone()),
-            forward_ad_multi_1000: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<1000>>::new(), f.clone(), f.clone()),
+            forward_ad_multi_64: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<64>>::new(), f.clone(), f.clone()),
         }
     }
 }
