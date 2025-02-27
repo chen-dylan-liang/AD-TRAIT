@@ -1,1 +1,4 @@
-waiting to be written
+approach	,n	,m	,avg_time	,std_time	
+FAD-ad trait-Rust,1000,1,28896.0288,1599.8036267718371
+RAD-ad trait-Rust,1000,1,259.7097299999999,418.81984649372504
+FAD-SIMD-ad trait-Rust,1000,1,3267.7786399999986,658.0190469783174

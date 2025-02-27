@@ -23,11 +23,11 @@ pub fn write_data(
 
     if !file_exists {
         writer.write_record(&[
-            "approach\t",
-            "n\t",
-            "m\t",
-            "avg_time\t",
-            "std_time\t",
+            "approach",
+            "n",
+            "m",
+            "avg_time",
+            "std_time",
         ]).unwrap();
     }
 
