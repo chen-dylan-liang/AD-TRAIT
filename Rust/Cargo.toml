@@ -19,6 +19,7 @@ apollo-rust-lie-adtrait={git = "https://github.com/Apollo-Lab-Yale/apollo-rust",
 nalgebra = { version = "0.33.0", features = ["rand", "serde-serialize"] }
 rand = "0.9.0"
 csv = "1.3.1"
+burn = { version = "0.16.0", features = ["autodiff", "wgpu"] }
 
 [lib]
 name = "ad_trait_eval"

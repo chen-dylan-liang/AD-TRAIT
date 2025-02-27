@@ -1,6 +1,7 @@
 mod eval1;
 mod eval2;
 mod csv_utils;
+pub mod burn;
 
 use std::char::MAX;
 use std::cmp::{max, min};
