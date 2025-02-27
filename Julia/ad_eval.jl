@@ -86,7 +86,6 @@ function EvaluationConditionPack(n::Int, m::Int, o::Int; seed::Int=0)
                                    forwardDiffJL, reverseDiffJL)
 end
 
-# Benchmark each method.
 function run_experiment(n::Int, m::Int, o::Int)
     println("\nRunning Experiment with (n, m, o) = ($n, $m, $o)")
     ec = EvaluationConditionPack(n, m, o; seed=1234)
@@ -96,34 +95,66 @@ function run_experiment(n::Int, m::Int, o::Int)
     rev_engine = ec.reverseDiffJL
     fd_engine = ec.forwardDiffJL
     x = rand(n)
+    
+    # Run benchmarks and capture execution times
     println("\nBenchmarking Enzyme Reverse")
-    J_enzyme_rev = @btime $enzyme_rev_engine($x) seconds=2
+    enzyme_rev_time = @belapsed $enzyme_rev_engine($x) seconds=2
+    J_enzyme_rev = enzyme_rev_engine(x)
     println("Enzyme Reverse: ", J_enzyme_rev)
     
     println("\nBenchmarking Enzyme Forward")
-    J_enzyme_fwd = @btime $enzyme_fd_engine($x) seconds=2
+    enzyme_fwd_time = @belapsed $enzyme_fd_engine($x) seconds=2
+    J_enzyme_fwd = enzyme_fd_engine(x)
     println("Enzyme Forward execution time: ", J_enzyme_fwd)
     
     println("\nBenchmarking Zygote")
-    J_zygote_rev = @btime $zygote_engine($x) seconds=2
-    println("Zygote Reverse Jacobian:       ", J_zygote_rev)
-
-   
+    zygote_time = @belapsed $zygote_engine($x) seconds=2
+    J_zygote_rev = zygote_engine(x)
+    println("Zygote Reverse Jacobian: ", J_zygote_rev)
     
     println("\nBenchmarking ReverseDiffJL")
-    J_forwarddiff = @btime $rev_engine($x) seconds=2
-    #println("ReverseDiffJL Jacobian:  ", J_forwarddiff)
+    reversediff_time = @belapsed $rev_engine($x) seconds=2
+    J_forwarddiff = rev_engine(x)
+    #println("ReverseDiffJL Jacobian: ", J_forwarddiff)
     
     println("\nBenchmarking ForwardDiffJL")
-    J_reversediff = @btime $fd_engine($x) seconds=2
-    println("ForwardDiffJL Jacobian:  ", J_reversediff)
+    forwarddiff_time = @belapsed $fd_engine($x) seconds=2
+    J_reversediff = fd_engine(x)
+    println("ForwardDiffJL Jacobian: ", J_reversediff)
+    
+    # Write results to CSV file
+    filename = "autodiff_benchmark_results.csv"
+    
+    # Check if file exists, if not create with header
+    if !isfile(filename)
+        open(filename, "w") do file
+            write(file, "approach,n,m,time\n")
+        end
+    end
+    
+    # Append results to file in long format (each method on a separate line)
+    open(filename, "a") do file
+        write(file, "enzyme_reverse,$n,$m,$enzyme_rev_time\n")
+        write(file, "enzyme_forward,$n,$m,$enzyme_fwd_time\n")
+        write(file, "zygote,$n,$m,$zygote_time\n")
+        write(file, "reversediff,$n,$m,$reversediff_time\n")
+        write(file, "forwarddiff,$n,$m,$forwarddiff_time\n")
+    end
 end
 
 function main()
-    run_experiment(100, 1, 1000)
-    run_experiment(1, 100, 1000)
-    run_experiment(10, 10, 1000)
-    #run_experiment(50, 50, 1000)
+    # First set: varying input dimension with fixed output dimension
+    for n in [1, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 
+              550, 600, 650, 700, 750, 800, 850, 900, 950, 1000]
+        run_experiment(n, 1, 1000)
+    end
+    
+    # Second set: combinations of input and output dimensions
+    for n in [1, 10, 20, 30, 40, 50]
+        for m in [1, 10, 20, 30, 40, 50]
+            run_experiment(n, m, 1000)
+        end
+    end
 end
 
 main()
