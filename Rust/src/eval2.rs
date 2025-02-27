@@ -48,6 +48,7 @@ impl <T:AD> DifferentiableFunctionTrait<T> for BenchmarkIK<T>{
         let t3 = (res[24].0.translation.vector - self.target_foot3_pos).norm();
         let t4 = (res[31].0.translation.vector - self.target_foot4_pos).norm();
         let t5 = LieGroupISE3q::new(res[39].0.inverse()*self.target_ee_pos.0).ln().vee().norm();
+
         Vec::from([t1*t1, t2*t2, t3*t3, t4*t4, t5*t5])
     }
 

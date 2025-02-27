@@ -18,6 +18,7 @@ apollo-rust-lie = {git = "https://github.com/Apollo-Lab-Yale/apollo-rust", packa
 apollo-rust-lie-adtrait={git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-lie-adtrait"}
 nalgebra = { version = "0.33.0", features = ["rand", "serde-serialize"] }
 rand = "0.9.0"
+csv = "1.3.1"
 
 [lib]
 name = "ad_trait_eval"

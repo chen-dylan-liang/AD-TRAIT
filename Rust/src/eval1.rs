@@ -5,8 +5,8 @@ use ad_trait::differentiable_function::{DifferentiableFunctionClass, Differentia
 
 #[derive(Clone, Debug)]
 pub struct BenchmarkFunctionVec {
-    n: usize,
-    m: usize,
+  pub  n: usize,
+  pub  m: usize,
     o: usize,
     r: Vec<Vec<usize>>,
     s: Vec<Vec<usize>>
@@ -75,8 +75,8 @@ impl DifferentiableFunctionClass for DCBenchmarkFunctionVec {
 
 #[derive(Clone, Debug)]
 pub struct BenchmarkFunctionNalgebra{
-    n: usize,
-    m: usize,
+   pub n: usize,
+   pub m: usize,
     o: usize,
     r: V<usize>,
     s: V<usize>,
