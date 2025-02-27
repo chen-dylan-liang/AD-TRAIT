@@ -87,17 +87,29 @@ int main() {
     const int NUM_TRIALS = 100;
     std::vector<BenchmarkResult> results;
 
-    // Define parameter combinations to test
-    std::vector<std::tuple<int, int, int>> params = {
-        {10, 5, 2},
-        {20, 10, 3},
-        {50, 20, 5},
-        {100, 50, 10}
-    };
+    // First set: varying input dimension with fixed output dimension
+    std::vector<std::pair<int, int>> params1;
+    for (int n : {1, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500,
+                  550, 600, 650, 700, 750, 800, 850, 900, 950, 1000}) {
+        params1.push_back({n, 1});
+    }
 
-    // Run benchmarks for each parameter combination
-    for (const auto& [n, m, o] : params) {
-        run_benchmark(n, m, o, NUM_TRIALS, results);
+// Run benchmarks for first parameter set
+    for (const auto& [n, m] : params1) {
+        run_benchmark(n, m, 1000, NUM_TRIALS, results);
+    }
+
+// Second set: combinations of input and output dimensions
+    std::vector<std::pair<int, int>> params2;
+    for (int n : {1, 10, 20, 30, 40, 50}) {
+        for (int m : {1, 10, 20, 30, 40, 50}) {
+            params2.push_back({n, m});
+        }
+    }
+
+// Run benchmarks for second parameter set
+    for (const auto& [n, m] : params2) {
+        run_benchmark(n, m, 1000, NUM_TRIALS, results);
     }
 
     // Save results to CSV file
