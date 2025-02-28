@@ -9,15 +9,22 @@ cd Rust
 ./eval1.sh
 cd ..
 
-# Run Julia benchmarks
-echo "\n===== Running Julia Benchmarks ====="
-cd Julia
-julia ad_eval.jl
-cd ..
-
 # Run C++ benchmarks
 echo "\n===== Running C++ Benchmarks ====="
 cd C++
+./eval1.sh
+cd ..
+
+
+# Run Julia benchmarks
+echo "\n===== Running Julia Benchmarks ====="
+cd Julia
+./eval1.sh
+cd ..
+
+# Run Python benchmarks
+echo "\n===== Running Python Benchmarks ====="
+cd Python
 ./eval1.sh
 cd ..
 

@@ -19,51 +19,75 @@ class EvaluationConditionPack1:
 
     def __init__(self, n: int, m: int, o: int):
         f = BenchmarkFunction2(n, m, o)
-
-        self.forward_ad_jax = FunctionEngine(f, DerivativeMethodForwardADJax(), backend=Backend.JAX)
-        self.reverse_ad_jax = FunctionEngine(f, DerivativeMethodReverseADJax(), backend=Backend.JAX)
-        self.forward_ad_jax_jit_compiled = FunctionEngine(f, DerivativeMethodForwardADJax(), backend=Backend.JAX, device=Device.CPU,
-                                                          jit_compile_d=True)
-        self.reverse_ad_jax_jit_compiled = FunctionEngine(f, DerivativeMethodReverseADJax(), backend=Backend.JAX,device=Device.CPU,
-                                                          jit_compile_d=True)
-        self.forward_ad_jax_jit_compiled_gpu = FunctionEngine(f, DerivativeMethodForwardADJax(), backend=Backend.JAX,
+        self.forward_ad_jax_jit_gpu = FunctionEngine(f, DerivativeMethodForwardADJax(), backend=Backend.JAX,
                                                               device=Device.CUDA, jit_compile_d=True)
-        self.reverse_ad_jax_jit_compiled_gpu = FunctionEngine(f, DerivativeMethodReverseADJax(), backend=Backend.JAX,
+        self.reverse_ad_jax_jit_gpu = FunctionEngine(f, DerivativeMethodReverseADJax(), backend=Backend.JAX,
                                                               device=Device.CUDA, jit_compile_d=True)
         self.reverse_ad_pytorch = FunctionEngine(f, DerivativeMethodReverseADPytorch(), backend=Backend.PyTorch)
-        self.forward_ad_jax_gpu = FunctionEngine(f, DerivativeMethodForwardADJax(), backend=Backend.JAX,
-                                                 device=Device.CUDA)
-        self.reverse_ad_jax_gpu = FunctionEngine(f, DerivativeMethodReverseADJax(), backend=Backend.JAX,
-                                                 device=Device.CUDA)
-        self.reverse_ad_pytorch_gpu = FunctionEngine(f, DerivativeMethodReverseADPytorch(), backend=Backend.PyTorch,
-                                                     device=Device.CUDA)
+
+
+
+import csv
+import os
+
+
+def run_experiment(n, m, num_passes=100):
+    print(f"\nRunning Experiment with (n, m) = ({n}, {m})")
+    #methods = ["reverse_ad_pytorch", "forward_ad_jax_jit_gpu", "reverse_ad_jax_jit_gpu"]
+    methods = ["reverse_ad_pytorch"]
+    results = {}
+
+    pack = EvaluationConditionPack1(n, m, 1000)
+    x = np.random.uniform(-1, 1, (n,))
+
+    for method in methods:
+        print(f"Benchmarking {method}")
+        engine = getattr(pack, method)
+        tl.set_backend(engine.backend.to_string())
+        x_tensor = tl.tensor(x)
+
+        # Warm-up run
+        engine.d_call(x_tensor)
+
+        # Timed runs
+        runtime = 0
+        for i in range(num_passes):
+            start = time.time()
+            engine.d_call(x_tensor)
+            runtime += time.time() - start
+
+        avg_runtime = runtime / num_passes
+        results[method] = avg_runtime
+        print(f"{method} average runtime: {avg_runtime:.6f} seconds")
+
+    # Write results to CSV
+    csv_file = "autodiff_benchmark_results.csv"
+    file_exists = os.path.isfile(csv_file)
+
+    with open(csv_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["approach", "n", "m", "time"])
+
+        for method, runtime in results.items():
+            writer.writerow([method, n, m, runtime])
+
+    return results
+
 
 if __name__ == "__main__":
-    n=100
-    m=1
-    num_passes=100
-    fd_jax_jit = 0
-    rev_jax_jit = 0
-    import os
+    # First set: varying input dimension with fixed output dimension
+    for n in [1, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500,
+              550, 600, 650, 700, 750, 800, 850, 900, 950, 1000]:
+        run_experiment(n, 1)
 
-    os.environ["JAX_PLATFORM_NAME"] = "cpu"
+    # Second set: combinations of input and output dimensions
+    for n in [1, 10, 20, 30, 40, 50]:
+        for m in [1, 10, 20, 30, 40, 50]:
+            run_experiment(n, m)
 
-    import jax
-    print(jax.devices())  # Should list a CPU device
-    for i in range(num_passes):
-        print("Start Pass {}".format(i))
-        pack = EvaluationConditionPack1(n, m, 1000)
-        tl.set_backend(pack.forward_ad_jax_jit_compiled.backend.to_string())
-        x= tl.tensor(np.random.uniform(-1, 1, (n,)))
-        start = time.time()
-        pack.forward_ad_jax_jit_compiled.d_call(x)
-        fd_jax_jit += time.time() - start
-        start = time.time()
-        pack.reverse_ad_jax_jit_compiled.d_call(x)
-        rev_jax_jit += time.time() - start
 
-    print(rev_jax_jit / num_passes)
-    print(fd_jax_jit / num_passes)
+
 
 
 

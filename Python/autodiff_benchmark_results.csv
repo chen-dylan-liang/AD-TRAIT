@@ -1,0 +1,4 @@
+approach,n,m,time
+reverse_ad_pytorch,1,1,0.014445245265960693
+reverse_ad_pytorch,50,1,0.014458632469177246
+reverse_ad_pytorch,100,1,0.014795854091644287
