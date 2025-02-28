@@ -102,9 +102,7 @@ int main() {
 // Second set: combinations of input and output dimensions
     std::vector<std::pair<int, int>> params2;
     for (int n : {1, 10, 20, 30, 40, 50}) {
-        for (int m : {1, 10, 20, 30, 40, 50}) {
-            params2.push_back({n, m});
-        }
+            params2.push_back({n, n});
     }
 
 // Run benchmarks for second parameter set

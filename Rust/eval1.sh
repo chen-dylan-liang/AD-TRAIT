@@ -13,15 +13,13 @@ do
 done
 
 # Second test: varying both INPUT_DIM and OUTPUT_DIM
-for INPUT_DIM in 1 10 20 30 40 50
+for DIM in 1 10 20 30 40 50
 do
-    for OUTPUT_DIM in 1 10 20 30 40 50
-    do
         # Update main.rs with new values
-        sed -i "s/const INPUT_DIM: usize = [0-9]*/const INPUT_DIM: usize = $INPUT_DIM/" ./src/bin/main.rs
-        sed -i "s/const OUTPUT_DIM: usize = [0-9]*/const OUTPUT_DIM: usize = $OUTPUT_DIM/" ./src/bin/main.rs
+        sed -i "s/const INPUT_DIM: usize = [0-9]*/const INPUT_DIM: usize = $DIM/" ./src/bin/main.rs
+        sed -i "s/const OUTPUT_DIM: usize = [0-9]*/const OUTPUT_DIM: usize = $DIM/" ./src/bin/main.rs
 
         # Compile and run
         cargo build --release && cargo run --release --bin main
-    done
 done
+

@@ -151,9 +151,7 @@ function main()
     
     # Second set: combinations of input and output dimensions
     for n in [1, 10, 20, 30, 40, 50]
-        for m in [1, 10, 20, 30, 40, 50]
-            run_experiment(n, m, 1000)
-        end
+	run_experiment(n, n, 1000)
     end
 end
 

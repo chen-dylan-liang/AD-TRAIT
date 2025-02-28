@@ -83,8 +83,7 @@ if __name__ == "__main__":
 
     # Second set: combinations of input and output dimensions
     for n in [1, 10, 20, 30, 40, 50]:
-        for m in [1, 10, 20, 30, 40, 50]:
-            run_experiment(n, m)
+        run_experiment(n, n)
 
 
 
