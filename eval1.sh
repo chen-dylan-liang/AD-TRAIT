@@ -6,7 +6,7 @@ date
 # Run Rust benchmarks
 echo "\n===== Running Rust Benchmarks ====="
 cd Rust
-bash eval1.bash
+./eval1.sh
 cd ..
 
 # Run Julia benchmarks
@@ -17,9 +17,9 @@ cd ..
 
 # Run C++ benchmarks
 echo "\n===== Running C++ Benchmarks ====="
-cd C++/build
-./AD
-cd ../..
+cd C++
+./eval1.sh
+cd ..
 
 echo "\n===== All Benchmarks Completed ====="
 date

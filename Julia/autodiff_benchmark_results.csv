@@ -1,0 +1,6 @@
+approach,n,m,time
+enzyme_reverse,1,1,4.679e-5
+enzyme_forward,1,1,1.7049e-5
+zygote,1,1,0.000585857
+reversediff,1,1,0.000269503
+forwarddiff,1,1,1.7078e-5
