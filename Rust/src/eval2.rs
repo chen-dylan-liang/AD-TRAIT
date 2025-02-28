@@ -104,27 +104,28 @@ def simple_pseudoinverse_newtons_method_for_experiment_2(condition, init_conditi
     end = time.time() - start
     return Experiment2Result(end, iterates, num_f_calls)
  */
-fn pseudo_inverse<T:AD>(mat: &M<T>, eps: T) -> M<T> {
+fn pseudo_inverse<T: AD>(mat: &M<T>, eps: T) -> M<T> {
     let svd = mat.singular_value_decomposition(SVDType::Full);
     let s = svd.singular_values();
     let u = svd.u();
     let vt = svd.vt();
-
-    let mut s_pinv= M::<T>::zeros(vt.nrows(), u.nrows());
-
-    for i in 0..s.len() {
+    let mut s_pinv = M::<T>::zeros(vt.nrows(), u.ncols());
+    let min_dim = std::cmp::min(s_pinv.nrows(), s_pinv.ncols());
+    for i in 0..std::cmp::min(s.len(), min_dim) {
         if s[i] > eps {
-           s_pinv[(i, i)] = T::one().div(s[i]);
+            s_pinv[(i, i)] = T::one().div(s[i]);
         } else {
             s_pinv[(i, i)] = T::zero();
         }
     }
+
     vt.transpose() * s_pinv * u.transpose()
 }
 
-pub fn simple_pseudoinverse_newtons_method_ik<E:DerivativeMethodTrait<T=f64>>(ad_method: E, init_cond: V<f64>, max_iter: usize, step_length: f64, threshold: f64) -> f64{
+pub fn simple_pseudoinverse_newtons_method_ik<E:DerivativeMethodTrait>(ad_method: E, init_cond: V<f64>, max_iter: usize, step_length: f64, threshold: f64) -> f64{
     let ik = BenchmarkIK::<f64>::new();
-    let ad_engine = DifferentiableBlock::new_with_tag(DCBenchmarkIK, ad_method, ik.clone(), ik.clone());
+    let ik_d = BenchmarkIK::<E::T>::new();
+    let ad_engine = DifferentiableBlock::new_with_tag(DCBenchmarkIK, ad_method, ik, ik_d);
     let mut q = init_cond;
     let start = Instant::now();
     let mut y = V::<f64>::from(ad_engine.call(q.as_slice()));
@@ -133,7 +134,6 @@ pub fn simple_pseudoinverse_newtons_method_ik<E:DerivativeMethodTrait<T=f64>>(ad
         let delta_q = pseudo_inverse(&jacobian, 1e-10)*y;
         q = q - step_length*delta_q;
         y = V::<f64>::from(ad_engine.call(q.as_slice()));
-        println!("{}: {:?}",i,y);
         if y.norm() < threshold {break;}
     }
     let duration = start.elapsed().as_secs_f64();
