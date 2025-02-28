@@ -63,7 +63,7 @@ def run_experiment(n, m, num_passes=5):
         print(f"{method} average runtime: {avg_runtime:.6f} seconds")
 
     # Write results to CSV
-    csv_file = "autodiff_benchmark_results_gpu.csv"
+    csv_file = "autodiff_benchmark_results_gpu1.csv"
     file_exists = os.path.isfile(csv_file)
 
     with open(csv_file, 'a', newline='') as f:
