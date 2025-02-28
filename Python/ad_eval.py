@@ -38,20 +38,22 @@ def run_experiment(n, m, num_passes=100):
     results = {}
 
     pack = EvaluationConditionPack1(n, m, 1000)
-    x = np.random.uniform(-1, 1, (n,))
 
     for method in methods:
         print(f"Benchmarking {method}")
         engine = getattr(pack, method)
         tl.set_backend(engine.backend.to_string())
+        x = np.random.uniform(-1, 1, (n,))
         x_tensor = tl.tensor(x)
-
+        print("Warmup")
         # Warm-up run
         engine.d_call(x_tensor)
-
+        print("Finish Warmup")
         # Timed runs
         runtime = 0
         for i in range(num_passes):
+            x = np.random.uniform(-1, 1, (n,))
+            x_tensor = tl.tensor(x)
             start = time.time()
             engine.d_call(x_tensor)
             runtime += time.time() - start
