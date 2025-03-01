@@ -33,8 +33,8 @@ import os
 
 def run_experiment(n, m, num_passes=100):
     print(f"\nRunning Experiment with (n, m) = ({n}, {m})")
-    #methods = ["reverse_ad_pytorch", "forward_ad_jax_jit_gpu", "reverse_ad_jax_jit_gpu"]
-    methods = ["reverse_ad_pytorch"]
+    methods = ["forward_ad_jax_jit_gpu", "reverse_ad_jax_jit_gpu"]
+    #methods = ["reverse_ad_pytorch"]
     results = {}
 
     pack = EvaluationConditionPack1(n, m, 1000)
@@ -63,7 +63,7 @@ def run_experiment(n, m, num_passes=100):
         print(f"{method} average runtime: {avg_runtime:.6f} seconds")
 
     # Write results to CSV
-    csv_file = "autodiff_benchmark_results.csv"
+    csv_file = "autodiff_benchmark_results_gpu.csv"
     file_exists = os.path.isfile(csv_file)
 
     with open(csv_file, 'a', newline='') as f:
