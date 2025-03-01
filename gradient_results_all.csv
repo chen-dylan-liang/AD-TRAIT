@@ -104,87 +104,171 @@ enzyme_forward,1000,1,0.002835612
 zygote,1000,1,0.001239238
 reversediff,1000,1,0.000270815
 forwarddiff,1000,1,0.002885812
-enzyme_reverse,1,1,4.6741e-5
-enzyme_forward,1,1,1.6848e-5
-zygote,1,1,0.000585363
-reversediff,1,1,0.000268355
-forwarddiff,1,1,1.6938e-5
-enzyme_reverse,10,10,0.003755061
-enzyme_forward,10,10,0.000193847
-zygote,10,10,0.05792079
-reversediff,10,10,0.005508171
-forwarddiff,10,10,0.00024099
-enzyme_reverse,20,20,0.014300119
-enzyme_forward,20,20,0.000414287
-zygote,20,20,0.273388853
-reversediff,20,20,0.017131267
-forwarddiff,20,20,0.000904668
-enzyme_reverse,30,30,0.032790535
-enzyme_forward,30,30,0.000654166
-zygote,30,30,0.66176931
-reversediff,30,30,0.034912328
-forwarddiff,30,30,0.00202777
-enzyme_reverse,40,40,0.057413751
-enzyme_forward,40,40,0.000916981
-zygote,40,40,1.223031822
-reversediff,40,40,0.058428373
-forwarddiff,40,40,0.003648078
-enzyme_reverse,50,50,0.091948292
-enzyme_forward,50,50,0.001275188
-zygote,50,50,2.030215512
-reversediff,50,50,0.08853781
-forwarddiff,50,50,0.00570556
-FAD-AutoDiff-Cpp,1,1,21.09
-RAD-AutoDiff-Cpp,1,1,98.93
-FAD-AutoDiff-Cpp,50,1,1094.91
-RAD-AutoDiff-Cpp,50,1,104.46
-FAD-AutoDiff-Cpp,100,1,2151.19
-RAD-AutoDiff-Cpp,100,1,104.68
-FAD-AutoDiff-Cpp,150,1,3220.94
-RAD-AutoDiff-Cpp,150,1,118.42
-FAD-AutoDiff-Cpp,200,1,4271.55
-RAD-AutoDiff-Cpp,200,1,117.8
-FAD-AutoDiff-Cpp,250,1,5354.11
-RAD-AutoDiff-Cpp,250,1,117.99
-FAD-AutoDiff-Cpp,300,1,6438.62
-RAD-AutoDiff-Cpp,300,1,118.51
-FAD-AutoDiff-Cpp,350,1,7571.68
-RAD-AutoDiff-Cpp,350,1,122.32
-FAD-AutoDiff-Cpp,400,1,8598.89
-RAD-AutoDiff-Cpp,400,1,119.97
-FAD-AutoDiff-Cpp,450,1,9658.23
-RAD-AutoDiff-Cpp,450,1,119.29
-FAD-AutoDiff-Cpp,500,1,10767.7
-RAD-AutoDiff-Cpp,500,1,121.07
-FAD-AutoDiff-Cpp,550,1,11838.5
-RAD-AutoDiff-Cpp,550,1,119.93
-FAD-AutoDiff-Cpp,600,1,12874.6
-RAD-AutoDiff-Cpp,600,1,119.65
-FAD-AutoDiff-Cpp,650,1,13977.5
-RAD-AutoDiff-Cpp,650,1,120.88
-FAD-AutoDiff-Cpp,700,1,15080.2
-RAD-AutoDiff-Cpp,700,1,121.07
-FAD-AutoDiff-Cpp,750,1,16214.7
-RAD-AutoDiff-Cpp,750,1,122.86
-FAD-AutoDiff-Cpp,800,1,17259
-RAD-AutoDiff-Cpp,800,1,122.18
-FAD-AutoDiff-Cpp,850,1,18450.3
-RAD-AutoDiff-Cpp,850,1,128.47
-FAD-AutoDiff-Cpp,900,1,19531.6
-RAD-AutoDiff-Cpp,900,1,127.57
-FAD-AutoDiff-Cpp,950,1,20605.3
-RAD-AutoDiff-Cpp,950,1,128.09
-FAD-AutoDiff-Cpp,1000,1,21674
-RAD-AutoDiff-Cpp,1000,1,129.31
-FAD-AutoDiff-Cpp,1,1,21.23
-RAD-AutoDiff-Cpp,1,1,95.88
-FAD-AutoDiff-Cpp,10,10,2482.53
-RAD-AutoDiff-Cpp,10,10,1004.57
-FAD-AutoDiff-Cpp,20,20,10139.7
-RAD-AutoDiff-Cpp,20,20,2048
-FAD-AutoDiff-Cpp,30,30,23037.7
-RAD-AutoDiff-Cpp,30,30,3068.58
-FAD-AutoDiff-Cpp,40,40,41159.3
-RAD-AutoDiff-Cpp,40,40,4065.03
-FAD-AutoDiff-Cpp,50,50,64395.7
-RAD-AutoDiff-Cpp,50,50,5088.19
+FAD-AutoDiff-Cpp,1,1,0.00002109
+RAD-AutoDiff-Cpp,1,1,0.00009893
+FAD-AutoDiff-Cpp,50,1,0.00109491
+RAD-AutoDiff-Cpp,50,1,0.00010446
+FAD-AutoDiff-Cpp,100,1,0.00215119
+RAD-AutoDiff-Cpp,100,1,0.00010468
+FAD-AutoDiff-Cpp,150,1,0.00322094
+RAD-AutoDiff-Cpp,150,1,0.00011842
+FAD-AutoDiff-Cpp,200,1,0.00427155
+RAD-AutoDiff-Cpp,200,1,0.0001178
+FAD-AutoDiff-Cpp,250,1,0.00535411
+RAD-AutoDiff-Cpp,250,1,0.00011799
+FAD-AutoDiff-Cpp,300,1,0.00643862
+RAD-AutoDiff-Cpp,300,1,0.00011851
+FAD-AutoDiff-Cpp,350,1,0.00757168
+RAD-AutoDiff-Cpp,350,1,0.00012232
+FAD-AutoDiff-Cpp,400,1,0.00859889
+RAD-AutoDiff-Cpp,400,1,0.00011997
+FAD-AutoDiff-Cpp,450,1,0.00965823
+RAD-AutoDiff-Cpp,450,1,0.00011929
+FAD-AutoDiff-Cpp,500,1,0.0107677
+RAD-AutoDiff-Cpp,500,1,0.00012107
+FAD-AutoDiff-Cpp,550,1,0.0118385
+RAD-AutoDiff-Cpp,550,1,0.00011993
+FAD-AutoDiff-Cpp,600,1,0.0128746
+RAD-AutoDiff-Cpp,600,1,0.00011965
+FAD-AutoDiff-Cpp,650,1,0.0139775
+RAD-AutoDiff-Cpp,650,1,0.00012088
+FAD-AutoDiff-Cpp,700,1,0.0150802
+RAD-AutoDiff-Cpp,700,1,0.00012107
+FAD-AutoDiff-Cpp,750,1,0.0162147
+RAD-AutoDiff-Cpp,750,1,0.00012286
+FAD-AutoDiff-Cpp,800,1,0.017259
+RAD-AutoDiff-Cpp,800,1,0.00012218
+FAD-AutoDiff-Cpp,850,1,0.0184503
+RAD-AutoDiff-Cpp,850,1,0.00012847
+FAD-AutoDiff-Cpp,900,1,0.0195316
+RAD-AutoDiff-Cpp,900,1,0.00012757
+FAD-AutoDiff-Cpp,950,1,0.0206053
+RAD-AutoDiff-Cpp,950,1,0.00012809
+FAD-AutoDiff-Cpp,1000,1,0.021674
+RAD-AutoDiff-Cpp,1000,1,0.00012931
+reverse_ad_pytorch,1,1,0.01451490879058838
+reverse_ad_pytorch,50,1,0.014488775730133057
+reverse_ad_pytorch,100,1,0.014919831752777099
+reverse_ad_pytorch,150,1,0.014527113437652587
+reverse_ad_pytorch,200,1,0.014586961269378662
+reverse_ad_pytorch,250,1,0.01506117582321167
+reverse_ad_pytorch,300,1,0.014635825157165527
+reverse_ad_pytorch,350,1,0.014693853855133056
+reverse_ad_pytorch,400,1,0.014657378196716309
+reverse_ad_pytorch,450,1,0.014599876403808594
+reverse_ad_pytorch,500,1,0.015061228275299073
+reverse_ad_pytorch,550,1,0.014687151908874511
+reverse_ad_pytorch,600,1,0.015014777183532715
+reverse_ad_pytorch,650,1,0.014748225212097168
+reverse_ad_pytorch,700,1,0.014686915874481201
+reverse_ad_pytorch,750,1,0.01457221269607544
+reverse_ad_pytorch,800,1,0.01460214614868164
+reverse_ad_pytorch,850,1,0.014841074943542481
+reverse_ad_pytorch,900,1,0.01473055362701416
+reverse_ad_pytorch,950,1,0.014716610908508301
+reverse_ad_pytorch,1000,1,0.014657528400421142
+forward_ad_jax_jit_gpu,1,1,0.0038674656550089516
+reverse_ad_jax_jit_gpu,1,1,0.011489880879720053
+forward_ad_jax_jit_gpu,50,1,0.0053269553184509275
+reverse_ad_jax_jit_gpu,50,1,0.014046687285105388
+forward_ad_jax_jit_gpu,100,1,0.005360238552093506
+reverse_ad_jax_jit_gpu,100,1,0.013880110581715902
+forward_ad_jax_jit_gpu,150,1,0.005515389442443848
+reverse_ad_jax_jit_gpu,150,1,0.014000104268391928
+forward_ad_jax_jit_gpu,200,1,0.005458031495412191
+reverse_ad_jax_jit_gpu,200,1,0.013946918646494548
+forward_ad_jax_jit_gpu,250,1,0.00535718043645223
+reverse_ad_jax_jit_gpu,250,1,0.013863057295481363
+forward_ad_jax_jit_gpu,300,1,0.005420687198638916
+reverse_ad_jax_jit_gpu,300,1,0.013978484471638998
+forward_ad_jax_jit_gpu,350,1,0.005375031630198161
+reverse_ad_jax_jit_gpu,350,1,0.013870794773101807
+forward_ad_jax_jit_gpu,400,1,0.005474546750386556
+reverse_ad_jax_jit_gpu,400,1,0.013906853199005127
+forward_ad_jax_jit_gpu,450,1,0.0054963803291320805
+reverse_ad_jax_jit_gpu,450,1,0.013997808297475179
+forward_ad_jax_jit_gpu,500,1,0.005503005186716716
+reverse_ad_jax_jit_gpu,500,1,0.013868508338928222
+forward_ad_jax_jit_gpu,550,1,0.005542972087860107
+reverse_ad_jax_jit_gpu,550,1,0.013909386793772379
+forward_ad_jax_jit_gpu,600,1,0.005469002723693848
+reverse_ad_jax_jit_gpu,600,1,0.013987590471903483
+forward_ad_jax_jit_gpu,650,1,0.005512058734893799
+reverse_ad_jax_jit_gpu,650,1,0.013839234511057535
+forward_ad_jax_jit_gpu,700,1,0.005470658143361409
+reverse_ad_jax_jit_gpu,700,1,0.013969406286875407
+forward_ad_jax_jit_gpu,750,1,0.0055506761868794755
+reverse_ad_jax_jit_gpu,750,1,0.014020076592763265
+forward_ad_jax_jit_gpu,800,1,0.005422631104787191
+reverse_ad_jax_jit_gpu,800,1,0.013786389827728271
+forward_ad_jax_jit_gpu,850,1,0.0055055173238118486
+reverse_ad_jax_jit_gpu,850,1,0.0140122127532959
+forward_ad_jax_jit_gpu,900,1,0.0055606420834859215
+reverse_ad_jax_jit_gpu,900,1,0.01379956324895223
+forward_ad_jax_jit_gpu,950,1,0.005460539658864339
+reverse_ad_jax_jit_gpu,950,1,0.013898796240488688
+forward_ad_jax_jit_gpu,1000,1,0.005683763027191162
+reverse_ad_jax_jit_gpu,1000,1,0.01395391861597697
+FAD-ad trait-Rust,1,1,0.0000229992
+RAD-ad trait-Rust,1,1,0.00011973383
+FAD-SIMD-ad trait-Rust,1,1,0.00002281113
+FAD-ad trait-Rust,50,1,0.00183994539
+RAD-ad trait-Rust,50,1,0.00024481117
+FAD-SIMD-ad trait-Rust,50,1,0.00006704435
+FAD-ad trait-Rust,100,1,0.00232207587
+RAD-ad trait-Rust,100,1,0.00011919618
+FAD-SIMD-ad trait-Rust,100,1,0.0001367808
+FAD-ad trait-Rust,150,1,0.00350637077
+RAD-ad trait-Rust,150,1,0.00012954938
+FAD-SIMD-ad trait-Rust,150,1,0.00032869265
+FAD-ad trait-Rust,200,1,0.00469757118
+RAD-ad trait-Rust,200,1,0.00011411941
+FAD-SIMD-ad trait-Rust,200,1,0.00037814803
+FAD-ad trait-Rust,250,1,0.00587972752
+RAD-ad trait-Rust,250,1,0.0001205791
+FAD-SIMD-ad trait-Rust,250,1,0.00044937978
+FAD-ad trait-Rust,300,1,0.00747227271
+RAD-ad trait-Rust,300,1,0.00012287041
+FAD-SIMD-ad trait-Rust,300,1,0.0006831425
+FAD-ad trait-Rust,350,1,0.0082111945
+RAD-ad trait-Rust,350,1,0.00011751795
+FAD-SIMD-ad trait-Rust,350,1,0.00064716738
+FAD-ad trait-Rust,400,1,0.00978875506
+RAD-ad trait-Rust,400,1,0.00012288225
+FAD-SIMD-ad trait-Rust,400,1,0.00081903512
+FAD-ad trait-Rust,450,1,0.01050037691
+RAD-ad trait-Rust,450,1,0.00012299158
+FAD-SIMD-ad trait-Rust,450,1,0.00079999161
+FAD-ad trait-Rust,500,1,0.01209851102
+RAD-ad trait-Rust,500,1,0.00012865621
+FAD-SIMD-ad trait-Rust,500,1,0.00088806859
+FAD-ad trait-Rust,550,1,0.01281660462
+RAD-ad trait-Rust,550,1,0.00012097489
+FAD-SIMD-ad trait-Rust,550,1,0.00094517721
+FAD-ad trait-Rust,600,1,0.01445436839
+RAD-ad trait-Rust,600,1,0.0001334769
+FAD-SIMD-ad trait-Rust,600,1,0.00102848943
+FAD-ad trait-Rust,650,1,0.01518292482
+RAD-ad trait-Rust,650,1,0.00012273775
+FAD-SIMD-ad trait-Rust,650,1,0.00110567141
+FAD-ad trait-Rust,700,1,0.01631629028
+RAD-ad trait-Rust,700,1,0.00012479998
+FAD-SIMD-ad trait-Rust,700,1,0.00111462239
+FAD-ad trait-Rust,750,1,0.01747818077
+RAD-ad trait-Rust,750,1,0.00012580801
+FAD-SIMD-ad trait-Rust,750,1,0.00112059523
+FAD-ad trait-Rust,800,1,0.01878200018
+RAD-ad trait-Rust,800,1,0.00012806471
+FAD-SIMD-ad trait-Rust,800,1,0.00125168587
+FAD-ad trait-Rust,850,1,0.02011551833
+RAD-ad trait-Rust,850,1,0.0001342127
+FAD-SIMD-ad trait-Rust,850,1,0.00130097987
+FAD-ad trait-Rust,900,1,0.02100755578
+RAD-ad trait-Rust,900,1,0.00013078955
+FAD-SIMD-ad trait-Rust,900,1,0.001386548
+FAD-ad trait-Rust,950,1,0.02259016618
+RAD-ad trait-Rust,950,1,0.00013710955
+FAD-SIMD-ad trait-Rust,950,1,0.00143711889
+FAD-ad trait-Rust,1000,1,0.02361632042
+RAD-ad trait-Rust,1000,1,0.00014787638
+FAD-SIMD-ad trait-Rust,1000,1,0.00145026954

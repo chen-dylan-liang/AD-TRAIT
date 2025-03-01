@@ -1,0 +1,79 @@
+approach,n,m,time
+enzyme_reverse,1,1,4.6741e-5
+enzyme_forward,1,1,1.6848e-5
+zygote,1,1,0.000585363
+reversediff,1,1,0.000268355
+forwarddiff,1,1,1.6938e-5
+enzyme_reverse,10,10,0.003755061
+enzyme_forward,10,10,0.000193847
+zygote,10,10,0.05792079
+reversediff,10,10,0.005508171
+forwarddiff,10,10,0.00024099
+enzyme_reverse,20,20,0.014300119
+enzyme_forward,20,20,0.000414287
+zygote,20,20,0.273388853
+reversediff,20,20,0.017131267
+forwarddiff,20,20,0.000904668
+enzyme_reverse,30,30,0.032790535
+enzyme_forward,30,30,0.000654166
+zygote,30,30,0.66176931
+reversediff,30,30,0.034912328
+forwarddiff,30,30,0.00202777
+enzyme_reverse,40,40,0.057413751
+enzyme_forward,40,40,0.000916981
+zygote,40,40,1.223031822
+reversediff,40,40,0.058428373
+forwarddiff,40,40,0.003648078
+enzyme_reverse,50,50,0.091948292
+enzyme_forward,50,50,0.001275188
+zygote,50,50,2.030215512
+reversediff,50,50,0.08853781
+forwarddiff,50,50,0.00570556
+FAD-AutoDiff-Cpp,1,1,0.00002123
+RAD-AutoDiff-Cpp,1,1,0.00009588
+FAD-AutoDiff-Cpp,10,10,0.00248253
+RAD-AutoDiff-Cpp,10,10,0.00100457
+FAD-AutoDiff-Cpp,20,20,0.0101397
+RAD-AutoDiff-Cpp,20,20,0.002048
+FAD-AutoDiff-Cpp,30,30,0.0230377
+RAD-AutoDiff-Cpp,30,30,0.00306858
+FAD-AutoDiff-Cpp,40,40,0.0411593
+RAD-AutoDiff-Cpp,40,40,0.00406503
+FAD-AutoDiff-Cpp,50,50,0.0643957
+RAD-AutoDiff-Cpp,50,50,0.00508819
+reverse_ad_pytorch,1,1,0.014537575244903565
+reverse_ad_pytorch,10,10,1.0657243537902832
+reverse_ad_pytorch,20,20,4.205460784435272
+reverse_ad_pytorch,30,30,9.501591756343842
+reverse_ad_pytorch,40,40,16.95724950313568
+reverse_ad_pytorch,50,50,27.051342010498047
+forward_ad_jax_jit_gpu,1,1,0.008266432285308838
+reverse_ad_jax_jit_gpu,1,1,0.024168279965718586
+forward_ad_jax_jit_gpu,10,10,0.011847810745239258
+reverse_ad_jax_jit_gpu,10,10,0.028509856859842937
+forward_ad_jax_jit_gpu,20,20,0.011875866254170735
+reverse_ad_jax_jit_gpu,20,20,0.028586806456247966
+forward_ad_jax_jit_gpu,30,30,0.01180796225865682
+reverse_ad_jax_jit_gpu,30,30,0.028855759302775064
+forward_ad_jax_jit_gpu,40,40,0.011646324793497722
+reverse_ad_jax_jit_gpu,40,40,0.03086684226989746
+forward_ad_jax_jit_gpu,50,50,0.01180150588353475
+reverse_ad_jax_jit_gpu,50,50,0.02930585781733195
+FAD-ad trait-Rust,1,1,0.00003651048
+RAD-ad trait-Rust,1,1,0.00015688228
+FAD-SIMD-ad trait-Rust,1,1,0.00003632975
+FAD-ad trait-Rust,10,10,0.0023651843
+RAD-ad trait-Rust,10,10,0.00240818489
+FAD-SIMD-ad trait-Rust,10,10,0.00026270992
+FAD-ad trait-Rust,20,20,0.00983109524
+RAD-ad trait-Rust,20,20,0.00839409478
+FAD-SIMD-ad trait-Rust,20,20,0.00055326074
+FAD-ad trait-Rust,30,30,0.02096956636
+RAD-ad trait-Rust,30,30,0.01632126544
+FAD-SIMD-ad trait-Rust,30,30,0.00084571378
+FAD-ad trait-Rust,40,40,0.0375878404
+RAD-ad trait-Rust,40,40,0.02793315615
+FAD-SIMD-ad trait-Rust,40,40,0.00125312441
+FAD-ad trait-Rust,50,50,0.05876139527
+RAD-ad trait-Rust,50,50,0.04412466274
+FAD-SIMD-ad trait-Rust,50,50,0.00185023446
