@@ -4,14 +4,18 @@ mod csv_utils;
 pub mod burn;
 
 use std::char::MAX;
-use std::cmp::{max, min};
+use std::cmp::{max, min, Reverse};
 use std::time::Instant;
+use ad_trait::AD;
 use ad_trait::differentiable_block::DifferentiableBlock;
-use ad_trait::differentiable_function::{ForwardAD, ForwardADMulti, ReverseAD};
+use ad_trait::differentiable_function::{DifferentiableFunctionTrait, FiniteDifferencing, ForwardAD, ForwardADMulti, ReverseAD};
 use ad_trait::forward_ad::adfn::adfn;
+use ad_trait::reverse_ad::adr::GlobalComputationGraph;
 use apollo_rust_linalg_adtrait::{ApolloDVectorTrait, V};
 use eval1::{BenchmarkFunctionNalgebra, DCBenchmarkFunctionNalgebra};
 use csv_utils::{ write_data, calculate_stats};
+use crate::eval2::{simple_pseudoinverse_newtons_method_ik, BenchmarkIK, DCBenchmarkIK};
+
 pub struct EvaluationConditionPack<const N: usize> {
     //pub finite_differencing: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing>,
     pub f: BenchmarkFunctionNalgebra,
@@ -55,6 +59,28 @@ pub fn benchmark_eval1<const N:usize>(pack:&EvaluationConditionPack<N>, passes:u
         let (avg, std) =calculate_stats(&runtime[i]);
         write_data("results/eval1.csv", approaches[i], pack.f.n, pack.f.m, avg, std);
     }
+}
+
+pub fn benchmark_eval2(){
+    let passes = 100;
+    let ik = BenchmarkIK::<f64>::new();
+    let mut durs_fad =Vec::<f64>::new();
+    let mut durs_rad =Vec::<f64>::new();
+    let mut durs_fd =Vec::<f64>::new();
+    let mut durs_mcfad =Vec::<f64>::new();
+    for i in 0..passes {
+        println!("Pass {i} running...");
+        let init_cond = V::<f64>::new_random_with_range(ik.num_inputs(),-0.2,0.2);
+        //durs_fad.push(simple_pseudoinverse_newtons_method_ik(ForwardAD::new(), init_cond.clone(), 10000,0.01, 0.01));
+        GlobalComputationGraph::get().reset();
+        durs_rad.push(simple_pseudoinverse_newtons_method_ik(ReverseAD::new(), init_cond.clone(), 10000,0.01, 0.01));
+        //durs_fd.push(simple_pseudoinverse_newtons_method_ik(FiniteDifferencing::new(), init_cond.clone(), 10000,0.01, 0.01));
+       // durs_mcfad.push(simple_pseudoinverse_newtons_method_ik(ForwardADMulti::<adfn<24>>::new(), init_cond.clone(), 10000,0.01, 0.01));
+    }
+   // println!("Forward AD:, (avg_time, std_time)={:?}", calculate_stats(&durs_fad));
+    println!("Reverse AD: (avg_time, std_time)={:?}", calculate_stats(&durs_rad));
+    //println!("Finite Diff:, (avg_time, std_time)={:?}", calculate_stats(&durs_fd));
+    //println!("Multi Channel Forward AD:,  (avg_time, std_time)={:?}", calculate_stats(&durs_mcfad));
 }
 
 

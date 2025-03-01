@@ -31,7 +31,7 @@ import csv
 import os
 
 
-def run_experiment(n, m, num_passes=100):
+def run_experiment(n, m, num_passes=5):
     print(f"\nRunning Experiment with (n, m) = ({n}, {m})")
     methods = ["forward_ad_jax_jit_gpu", "reverse_ad_jax_jit_gpu"]
     #methods = ["reverse_ad_pytorch"]
