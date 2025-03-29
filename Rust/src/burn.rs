@@ -1,9 +1,10 @@
-use burn::backend::{Autodiff, Wgpu};
+use burn::backend::{Autodiff, Wgpu, NdArray};
+//use burn::backend::
 use burn::prelude::Tensor;
 use burn::tensor::Distribution;
 use rand::Rng;
 
-type Backend = Autodiff<Wgpu>;
+type Backend = Autodiff<NdArray>;
 pub fn benchmark(x: &Tensor<Backend, 1>, o: usize) -> Tensor<Backend, 1>
 {
     let n = x.dims()[0];

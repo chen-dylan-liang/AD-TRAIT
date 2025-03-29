@@ -3,6 +3,7 @@ use std::time::Instant;
 use ad_trait::AD;
 use ad_trait::differentiable_block::DifferentiableBlock;
 use ad_trait::differentiable_function::{DerivativeMethodTrait, DifferentiableFunctionClass, DifferentiableFunctionTrait};
+use ad_trait::reverse_ad::adr::adr;
 use apollo_rust_linalg_adtrait::{ApolloDMatrixTrait, V};
 use apollo_rust_spatial_adtrait::vectors::{V3, V6};
 use apollo_rust_spatial_adtrait::lie::se3_implicit_quaternion::LieGroupISE3q;
@@ -10,50 +11,40 @@ use apollo_rust_spatial_adtrait::quaternions::UQ;
 use apollo_rust_robotics_core_adtrait::ChainNalgebraADTrait;
 use apollo_rust_modules::ResourcesRootDirectory;
 use apollo_rust_robotics_adtrait::ToChainNalgebraADTrait;
-use nalgebra::UnitQuaternion;
+use nalgebra::{Isometry3, UnitQuaternion};
 use crate::eval1::BenchmarkFunctionNalgebra;
 use apollo_rust_linalg_adtrait::{M, SVDType, SVDResult};
 use apollo_rust_lie_adtrait::{LieGroupElement, LieAlgebraElement};
-use apollo_rust_spatial_adtrait::isometry3::I3;
 use apollo_rust_spatial_adtrait::lie::h1::ApolloUnitQuaternionH1LieTrait;
+use apollo_rust_spatial_adtrait::isometry3::{ApolloIsometry3Trait, I3};
 #[derive(Clone)]
 pub struct BenchmarkIK<T:AD>{
     chain: ChainNalgebraADTrait<T>,
-    target_foot1_pos: V3<T>,
-    target_foot2_pos: V3<T>,
-    target_foot3_pos: V3<T>,
-    target_foot4_pos: V3<T>,
-    target_ee_pos: LieGroupISE3q<T>,
 }
 
 impl <T:AD> BenchmarkIK<T>{
     pub fn new()->Self{
         let dir=ResourcesRootDirectory::new_from_default_apollo_robots_dir();
-        let chain:ChainNalgebraADTrait<T> = dir.get_subdirectory("b1z1").to_chain_nalgebra_adtrait();
+        let chain:ChainNalgebraADTrait<T> = dir.get_subdirectory("b1z1").to_chain_nalgebra_adtrait::<f64>().to_other_ad_type::<T>();
         Self{
             chain,
-            target_foot1_pos: V3::new((0.45).into(), (-0.2).into(), 0.0.into()),
-            target_foot2_pos: V3::new((0.45).into()  , 0.2.into()  , 0.0.into()  ),
-            target_foot3_pos: V3::new((-0.2).into()   , (-0.2).into()  , 0.0.into()  ),
-            target_foot4_pos: V3::new((-0.2).into()  , 0.2.into()  , 0.0.into()  ),
-            target_ee_pos:   LieGroupISE3q::from_exponential_coordinates(&V6::new(0.0.into()  , 0.0.into()  , 0.0.into()  ,
-                                                                                  0.3.into()  , 0.0.into()  , 1.15.into()  ))
         }
     }
 }
 
 impl <T:AD> DifferentiableFunctionTrait<T> for BenchmarkIK<T>{
     fn call(&self, inputs: &[T], freeze: bool) -> Vec<T> {
-        let res = self.chain.fk(&V::<T>::from_column_slice(inputs));
-        let t1 = (res[10].0.translation.vector - self.target_foot1_pos).norm();
-        let t2 = (res[17].0.translation.vector - self.target_foot2_pos).norm();
-        let t3 = (res[24].0.translation.vector- self.target_foot3_pos).norm();
-        let t4 = (res[31].0.translation.vector - self.target_foot4_pos).norm();
-        let t5 = (res[39].0.translation.vector - self.target_ee_pos.0.translation.vector).norm();
-        let t6 = res[39].0.rotation.to_lie_group_h1().displacement(&self.target_ee_pos.0.rotation.to_lie_group_h1()).ln().vee().norm();
+        let res = self.chain.fk(&V::from_column_slice(inputs));
+        let t1 = (res[10].0.translation.vector - V3::new(0.45.into(), (-0.2).into(), 0.0.into())).norm();
+        let t2 = (res[17].0.translation.vector - V3::new(0.45.into()  , 0.2.into()  , 0.0.into()  )).norm();
+        let t3 = (res[24].0.translation.vector - V3::new((-0.2).into()   , (-0.2).into()  , 0.0.into()  )).norm();
+        let t4 = (res[31].0.translation.vector - V3::new((-0.2).into()  , 0.2.into()  , 0.0.into()  )).norm();
+        let target_pose = LieGroupISE3q::new(Isometry3::from_slices_euler_angles(&[0.3.into(), 0.0.into(), 1.15.into()], &[0.0.into(), 0.0.into(), 0.0.into()]));
+        let t5 = (res[39].0.translation.vector - target_pose.0.translation.vector).norm();
+        let t6 = res[39].0.rotation.to_lie_group_h1().displacement(&target_pose.0.rotation.to_lie_group_h1()).ln().vee().norm();
 
-        Vec::from([t1**t1, t2*t2, t3*t3, t4*t4, t5*t5, t6*t6])
-    }
+        vec![t1*t1, t2*t2, t3*t3, t4*t4, t5*t5, t6*t6]
+            }
 
     fn num_inputs(&self) -> usize {
         self.chain.num_dofs()
