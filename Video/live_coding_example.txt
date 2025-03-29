@@ -1,0 +1,32 @@
+// Implement DifferentiableFunctionTrait for Foo
+pub struct Foo;
+impl<T: AD> DifferentiableFunctionTrait<T> for Foo{
+	fn call(&self, x: &[T])->Vec<T>{
+		Vec::from([x[0]*x[0]+x[1]*x[1]])
+	}
+	fn num_inputs(&self)->usize{2}
+	fn num_outputs(&self)->usize{1}
+}
+ 
+// Wrap Foo into a DifferentiableFunctionClass
+pub struct FooCls;
+impl DifferentiableFunctionClass for FooCls{
+	type FunctionType<T: AD> = Foo;
+}
+
+fn main(){
+	// Choose ad_method among ForwardAD, ReverseAD, ForwardADMulti::<adfn<N>>, etc.
+	// according to your needs
+	let ad_method = ForwardAD::new();
+	// Construct a DifferentiableBlock
+	let ad_engine = DifferentiableBlock::new_with_tag(
+		FooCls, // DifferentiableFunctionClass tag
+		ad_method,
+		Foo{}, // used for function value evaluations
+		Foo{} // used for function derivative accumulations
+	);
+	// input
+	let x = &[1.0, -1.0];
+	// f_value = [2.0], f_derivative = [[2.0, -2.0]]
+	let (f_value, f_derivative) = ad_engine.derivative(x);
+}
