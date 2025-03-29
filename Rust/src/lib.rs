@@ -28,12 +28,13 @@ impl<const N:usize> EvaluationConditionPack<N> {
         let f = BenchmarkFunctionNalgebra::new(n, m, o);
         Self {
             f: f.clone(),
-            forward_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f.clone(), f.clone()),
+            forward_ad: DifferentiableBlock::<DCBenchmarkFunctionNalgebra,_>::new(ForwardAD::new(), f.clone(), f.clone()),//DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f.clone(), f.clone()),
             reverse_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ReverseAD::new(), f.clone(), f.clone()),
             mc_forward_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<N>>::new(), f.clone(), f.clone()),
         }
     }
 }
+
 
 pub fn benchmark_eval1<const N:usize>(pack:&EvaluationConditionPack<N>, passes:usize) {
     println!("Evaluation 1 running for n={}, m={}", pack.f.n, pack.f.m);

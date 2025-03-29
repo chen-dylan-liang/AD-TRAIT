@@ -52,7 +52,7 @@ impl <T:AD> DifferentiableFunctionTrait<T> for BenchmarkIK<T>{
         let t5 = (res[39].0.translation.vector - self.target_ee_pos.0.translation.vector).norm();
         let t6 = res[39].0.rotation.to_lie_group_h1().displacement(&self.target_ee_pos.0.rotation.to_lie_group_h1()).ln().vee().norm();
 
-        Vec::from([t1*t1, t2*t2, t3*t3, t4*t4, t5*t5, t6*t6])
+        Vec::from([t1**t1, t2*t2, t3*t3, t4*t4, t5*t5, t6*t6])
     }
 
     fn num_inputs(&self) -> usize {
