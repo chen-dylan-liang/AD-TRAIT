@@ -24,7 +24,10 @@ pub fn get_jacobian(){
     // choose ad_method among ForwardAD, ReverseAD, ForwardADMulti::<adfn<N>>, etc according to your needs
     let ad_method = ForwardADMulti::<adfn<16>>::new();
     // construct an ad engine providing derivatives
-    let ad_engine = FunctionEngine::new(ForwardKinematics::new(), ForwardKinematics::new(), ad_method);
+    let ad_engine = FunctionEngine::new(
+        ForwardKinematics::new(), // used for function value evaluations
+        ForwardKinematics::new(),  // used for function derivative accumulations
+        ad_method);
     // randomly sample an input
     let input = V::<f64>::new_random_with_range(ForwardKinematics::<f64>::new().num_inputs(),-0.2,0.2);
     // get jacobian
