@@ -2,36 +2,38 @@ pub mod eval1;
 pub mod eval2;
 pub mod csv_utils;
 pub mod burn;
+pub mod live_demo;
+
 
 use std::char::MAX;
 use std::cmp::{max, min, Reverse};
 use std::time::Instant;
 use ad_trait::AD;
-use ad_trait::differentiable_block::DifferentiableBlock;
+use ad_trait::function_engine::FunctionEngine;
 use ad_trait::differentiable_function::{DifferentiableFunctionTrait, FiniteDifferencing, ForwardAD, ForwardADMulti, ReverseAD};
 use ad_trait::forward_ad::adfn::adfn;
 use ad_trait::reverse_ad::adr::GlobalComputationGraph;
 use apollo_rust_linalg_adtrait::{ApolloDVectorTrait, V};
-use eval1::{BenchmarkFunctionNalgebra, DCBenchmarkFunctionNalgebra};
+use eval1::{BenchmarkFunctionNalgebra};
 use csv_utils::{ write_data, calculate_stats};
 use crate::csv_utils::calculate_stats_without_outliers;
-use crate::eval2::{simple_pseudoinverse_newtons_method_ik, BenchmarkIK, DCBenchmarkIK};
+use crate::eval2::{simple_pseudoinverse_newtons_method_ik, BenchmarkIK};
 
 pub struct EvaluationConditionPack<const N: usize> {
     //pub finite_differencing: DifferentiableBlock<DifferentiableFunctionClassBenchmarkFunction2, FiniteDifferencing>,
     pub f: BenchmarkFunctionNalgebra,
-    pub forward_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardAD>,
-    pub reverse_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ReverseAD>,
-    pub mc_forward_ad: DifferentiableBlock<DCBenchmarkFunctionNalgebra, ForwardADMulti<adfn<N>>>,
+    pub forward_ad: FunctionEngine<BenchmarkFunctionNalgebra, BenchmarkFunctionNalgebra, ForwardAD>,
+    pub reverse_ad: FunctionEngine<BenchmarkFunctionNalgebra, BenchmarkFunctionNalgebra, ReverseAD>,
+    pub mc_forward_ad:  FunctionEngine<BenchmarkFunctionNalgebra, BenchmarkFunctionNalgebra, ForwardADMulti<adfn<N>>>
 }
 impl<const N:usize> EvaluationConditionPack<N> {
     pub fn new(n: usize, m: usize, o: usize) -> Self {
         let f = BenchmarkFunctionNalgebra::new(n, m, o);
         Self {
             f: f.clone(),
-            forward_ad: DifferentiableBlock::<DCBenchmarkFunctionNalgebra,_>::new(ForwardAD::new(), f.clone(), f.clone()),//DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardAD::new(), f.clone(), f.clone()),
-            reverse_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ReverseAD::new(), f.clone(), f.clone()),
-            mc_forward_ad: DifferentiableBlock::new_with_tag(DCBenchmarkFunctionNalgebra, ForwardADMulti::<adfn<N>>::new(), f.clone(), f.clone()),
+            forward_ad: FunctionEngine::new(f.clone(), f.clone(), ForwardAD::new()),
+            reverse_ad: FunctionEngine::new(f.clone(), f.clone(), ReverseAD::new()),
+            mc_forward_ad:FunctionEngine::new(f.clone(), f.clone(),ForwardADMulti::<adfn<N>>::new())
         }
     }
 }

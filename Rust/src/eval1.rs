@@ -1,7 +1,8 @@
 use apollo_rust_linalg_adtrait::{V, M, ApolloDVectorTrait};
 use rand::Rng;
 use ad_trait::AD;
-use ad_trait::differentiable_function::{DifferentiableFunctionClass, DifferentiableFunctionTrait};
+use ad_trait::differentiable_function::{DifferentiableFunctionTrait};
+use crate::eval2::BenchmarkIK;
 
 #[derive(Clone, Debug)]
 pub struct BenchmarkFunctionVec {
@@ -36,6 +37,7 @@ impl BenchmarkFunctionVec {
 }
 
 impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionVec {
+    const NAME: &'static str = "NestedSineCosineVecTest";
     fn call(&self, inputs: &[T], _freeze: bool) -> Vec<T> {
         let mut out = vec![];
 
@@ -68,10 +70,6 @@ impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionVec {
     }
 }
 
-pub struct DCBenchmarkFunctionVec;
-impl DifferentiableFunctionClass for DCBenchmarkFunctionVec {
-    type FunctionType<T: AD> = BenchmarkFunctionVec;
-}
 
 #[derive(Clone, Debug)]
 pub struct BenchmarkFunctionNalgebra{
@@ -96,6 +94,7 @@ impl BenchmarkFunctionNalgebra {
 }
 
 impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionNalgebra {
+    const NAME: &'static str = "NestedSineCosineNalgebraTest";
     fn call(&self, inputs: &[T], freeze: bool) -> Vec<T> {
         let mut out = V::<T>::zeros(self.m);
 
@@ -122,9 +121,4 @@ impl<T: AD> DifferentiableFunctionTrait<T> for BenchmarkFunctionNalgebra {
     fn num_outputs(&self) -> usize {
         self.m
     }
-}
-
-pub struct DCBenchmarkFunctionNalgebra;
-impl DifferentiableFunctionClass for DCBenchmarkFunctionNalgebra {
-    type FunctionType<T: AD> = BenchmarkFunctionNalgebra;
 }

@@ -1,8 +1,9 @@
 use std::ops::Mul;
 use std::time::Instant;
 use ad_trait::AD;
-use ad_trait::differentiable_block::DifferentiableBlock;
-use ad_trait::differentiable_function::{DerivativeMethodTrait, DifferentiableFunctionClass, DifferentiableFunctionTrait};
+use ad_trait::ADNumMode::ForwardAD;
+use ad_trait::function_engine::FunctionEngine;
+use ad_trait::differentiable_function::{DerivativeMethodTrait, DifferentiableFunctionTrait};
 use ad_trait::reverse_ad::adr::adr;
 use apollo_rust_linalg_adtrait::{ApolloDMatrixTrait, V};
 use apollo_rust_spatial_adtrait::vectors::{V3, V6};
@@ -30,9 +31,13 @@ impl <T:AD> BenchmarkIK<T>{
             chain,
         }
     }
+    pub fn to_other_ad_type<T2: AD>(&self) -> BenchmarkIK<T2> {
+        BenchmarkIK { chain: self.chain.to_other_ad_type::<T2>()}
+    }
 }
 
 impl <T:AD> DifferentiableFunctionTrait<T> for BenchmarkIK<T>{
+    const NAME: &'static str = "InverseKinematics";
     fn call(&self, inputs: &[T], freeze: bool) -> Vec<T> {
         let res = self.chain.fk(&V::from_column_slice(inputs));
         let t1 = (res[10].0.translation.vector - V3::new(0.45.into(), (-0.2).into(), 0.0.into())).norm();
@@ -53,11 +58,6 @@ impl <T:AD> DifferentiableFunctionTrait<T> for BenchmarkIK<T>{
     fn num_outputs(&self) -> usize {
         6
     }
-}
-
-pub struct DCBenchmarkIK;
-impl DifferentiableFunctionClass for DCBenchmarkIK {
-    type FunctionType<T: AD> = BenchmarkIK<T>;
 }
 
 /*
@@ -118,8 +118,8 @@ fn pseudo_inverse<T: AD>(mat: &M<T>, eps: T) -> M<T> {
 
 pub fn simple_pseudoinverse_newtons_method_ik<E:DerivativeMethodTrait>(ad_method: E, init_cond: V<f64>, max_iter: usize, step_length: f64, threshold: f64) -> f64{
     let ik = BenchmarkIK::<f64>::new();
-    let ik_d = BenchmarkIK::<E::T>::new();
-    let ad_engine = DifferentiableBlock::new_with_tag(DCBenchmarkIK, ad_method, ik, ik_d);
+    let ik_d = ik.to_other_ad_type::<E::T>();
+    let ad_engine = FunctionEngine::new(ik, ik_d, ad_method);
     let mut q = init_cond;
     let start = Instant::now();
     //let mut y = V::<f64>::from(ad_engine.call(q.as_slice()));

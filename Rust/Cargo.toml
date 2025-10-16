@@ -4,7 +4,7 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
-ad_trait = { git = "https://github.com/djrakita/ad_trait" }
+ad_trait = { git = "https://github.com/djrakita/ad_trait", version="0.1.6"}
 apollo-rust-linalg-adtrait = { git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-linalg-adtrait"}
 apollo-rust-linalg = { git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-linalg"}
 apollo-rust-spatial = { git = "https://github.com/Apollo-Lab-Yale/apollo-rust", package = "apollo-rust-spatial"}
